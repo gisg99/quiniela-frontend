@@ -11,14 +11,15 @@ const BOMBOS = [
   { n: 3, label: 'Bombo 3 · Regular' },
   { n: 4, label: 'Bombo 4 · Malo' },
 ]
-const PRESET = ['#ef4444', '#f97316', '#f4c430', '#22c55e', '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#a3e635', '#fb7185', '#f59e0b']
+// 12 colores de familias bien distintas (sin amarillos ni rosas repetidos)
+const PRESET = ['#ef4444', '#f97316', '#f4c430', '#a3e635', '#22c55e', '#14b8a6', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef', '#ec4899', '#94a3b8']
 
-export default function Ajustes() {
+export default function Ajustes({ embedded = false }) {
   const { participants, reload } = useParticipants()
   const [teams, setTeams] = useState(null)
   const [error, setError] = useState(null)
   const [newName, setNewName] = useState('')
-  const [newColor, setNewColor] = useState(PRESET[5])
+  const [newColor, setNewColor] = useState(PRESET[7]) // azul
   const [busy, setBusy] = useState(false)
 
   const loadTeams = useCallback(() => {
@@ -49,10 +50,12 @@ export default function Ajustes() {
 
   return (
     <>
-      <div className="page-head">
-        <h1>Ajustes</h1>
-        <div className="sub">Gestiona a los participantes, sus colores y los 4 equipos (uno por bombo) de cada quien.</div>
-      </div>
+      {!embedded && (
+        <div className="page-head">
+          <h1>Ajustes</h1>
+          <div className="sub">Gestiona a los participantes, sus colores y los 4 equipos (uno por bombo) de cada quien.</div>
+        </div>
+      )}
 
       {/* Alta de participante */}
       <div className="card" style={{ marginBottom: '1rem' }}>

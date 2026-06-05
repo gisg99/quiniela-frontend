@@ -4,6 +4,7 @@ import {
   updateMatch, updateKnockout,
 } from '../api'
 import { Loading, ErrorBox, TeamName, Flag, fmtDate } from '../components/common'
+import Ajustes from './Ajustes'
 
 export default function Admin() {
   const [authChecked, setAuthChecked] = useState(false)
@@ -34,11 +35,6 @@ export default function Admin() {
     } catch (err) { setLoginErr(err) }
   }
 
-  function logout() {
-    localStorage.removeItem('admin_password')
-    setAuthed(false)
-  }
-
   if (!authChecked) return <Loading />
 
   if (adminRequired && !authed) {
@@ -59,20 +55,26 @@ export default function Admin() {
 
   return (
     <>
-      <div className="page-head spread">
+      <div className="page-head">
         <div>
-          <h1>Admin · Captura de resultados</h1>
-          <div className="sub">Al guardar un resultado, el bracket y los puntos se recalculan solos.</div>
+          <h1>Admin</h1>
+          <div className="sub">
+            {tab === 'ajustes'
+              ? 'Gestiona a los participantes, sus colores y los 4 equipos (uno por bombo) de cada quien.'
+              : 'Al guardar un resultado, el bracket y los puntos se recalculan solos.'}
+          </div>
         </div>
-        {adminRequired && <button className="btn sm" onClick={logout}>Cerrar sesión</button>}
       </div>
 
       <div className="row" style={{ marginBottom: '1rem' }}>
         <button className={'btn' + (tab === 'grupos' ? ' primary' : '')} onClick={() => setTab('grupos')}>Fase de grupos</button>
         <button className={'btn' + (tab === 'ko' ? ' primary' : '')} onClick={() => setTab('ko')}>Eliminatorias</button>
+        <button className={'btn' + (tab === 'ajustes' ? ' primary' : '')} onClick={() => setTab('ajustes')}>Participantes y equipos</button>
       </div>
 
-      {tab === 'grupos' ? <GruposAdmin /> : <KnockoutAdmin />}
+      {tab === 'grupos' && <GruposAdmin />}
+      {tab === 'ko' && <KnockoutAdmin />}
+      {tab === 'ajustes' && <Ajustes embedded />}
     </>
   )
 }
@@ -238,9 +240,9 @@ function ScoreRow({ left, right, meta, g1, g2, onSave }) {
           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{left}</span>
           <Flag name={left} size={28} />
         </span>
-        <input className="num" style={{ width: 42 }} value={a} onChange={(e) => setA(e.target.value)} type="number" min="0" />
+        <input className="num" style={{ width: 56 }} value={a} onChange={(e) => setA(e.target.value)} type="number" min="0" />
         <span className="muted">-</span>
-        <input className="num" style={{ width: 42 }} value={b} onChange={(e) => setB(e.target.value)} type="number" min="0" />
+        <input className="num" style={{ width: 56 }} value={b} onChange={(e) => setB(e.target.value)} type="number" min="0" />
         <TeamName name={right} size={28} bold style={{ flex: 1 }} />
         <button className="btn sm primary" onClick={save} disabled={busy}>✓</button>
         {ok && <span className="green">✓</span>}
